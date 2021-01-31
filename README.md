@@ -10,4 +10,4 @@ You have to configure the python API for V-rep by yourself first.
 (1) Frist open the handeye_calibration.ttt
 (2) run the easy_test.py in Pycharm 
 (3)You will see the image shown from opencv 
-![image](https://github.com/zhoushuai123/Virtual-Hand-Eye-Calibration/main/image/easy_test.png)
+![image](https://github.com/zhoushuai123/Virtual-Hand-Eye-Calibration/blob/main/image/easy_test.png)
