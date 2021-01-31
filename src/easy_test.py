@@ -1,3 +1,7 @@
+# Author: Mingchuan ZHOU
+# Contact: mingchuan.zhou@in.tum.de
+# Date: 31 Jan. 2021
+# Usage: for testing the easy image from CoppeliaSim via python remoteApi
 import sys
 # import open3d as o3d
 sys.path.append('python')
