@@ -3,14 +3,10 @@
 # Date: 31 Jan. 2021
 # Usage: for testing the easy image from CoppeliaSim via python remoteApi
 import sys
-# import open3d as o3d
 sys.path.append('python')
-import time
-import array
 import numpy as np
 import cv2
 print('Program started')
-import sim
 try:
     import sim as vrep
 except:
@@ -33,19 +29,28 @@ if clientID != -1:
     imcount = 0
     while (vrep.simxGetConnectionId(clientID) != -1):
         res, resolution, image = vrep.simxGetVisionSensorImage(clientID, v0, 0, vrep.simx_opmode_buffer)
-        # res, resolution_rgb, image_rgb = vrep.simxGetVisionSensorImage(clientID, v2, 0, vrep.simx_opmode_buffer)
         if res == vrep.simx_return_ok:
-            # res = vrep.simxSetVisionSensorImage(clientID, v1, image, 0, vrep.simx_opmode_oneshot)
             imcount = imcount + 1
-            res, resolution, image = vrep.simxGetVisionSensorImage(clientID, v0, 0, vrep.simx_opmode_buffer)
-            img = np.array(image, dtype=np.uint8)
-            img.resize([resolution[1], resolution[0], 3])
-            img = cv2.flip(img, 0)
-            cv2.imshow("Test",img)
+            res, rgb_resolution, rgb_image = vrep.simxGetVisionSensorImage(clientID, v0, 0, vrep.simx_opmode_buffer)
+            res, depth_resolution, depth_image = vrep.simxGetVisionSensorImage(clientID, v1, 0, vrep.simx_opmode_oneshot_wait)
+            rgb_img = np.array(rgb_image, dtype=np.uint8)
+            depth_img = np.array(depth_image, dtype=np.uint8)
+            index = []
+            for i in range(depth_resolution[0] * depth_resolution[1] * 3):
+                if (i % 3 != 0):
+                    index.append(i)
+            depth_img = np.delete(depth_img, index)
+            rgb_img.resize([rgb_resolution[1], rgb_resolution[0], 3])
+            depth_img.resize([depth_resolution[1], depth_resolution[0], 1])
+            rgb_img = cv2.flip(rgb_img, 0)
+            # depth_img = cv2.flip(depth_image, 0)
+            cv2.imshow("RGB_Image", rgb_img)
+            cv2.imshow("DEPTH_Image", depth_img)
             cv2.waitKey(1)
+            # time.sleep(1)
             print(imcount)
+        else:
+            print('Failed to show rgb and depth image')
 else:
     print('Failed connecting to remote API server')
 print('Program ended')
-
-
